@@ -1,0 +1,155 @@
+/* Cinematic Journey Styles */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --perspective: 1000px;
+    --neon-teal: #22d3ee;
+    --neon-blue: #3b82f6;
+    --neon-purple: #a855f7;
+}
+
+body {
+    overflow: hidden;
+    touch-action: none;
+    background-color: #020617;
+    perspective: var(--perspective);
+}
+
+/* --- 3D & Transitions --- */
+.slide {
+    transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1), opacity 1s ease, filter 1s ease;
+    will-change: transform, opacity, filter;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+}
+
+/* "Warp" Transition Logic */
+.slide.prev {
+    transform: scale(0.8) translateY(-100px) translateZ(-200px);
+    opacity: 0;
+    filter: blur(20px);
+    pointer-events: none;
+}
+
+.slide.next {
+    transform: scale(1.2) translateY(100px) translateZ(200px);
+    opacity: 0;
+    filter: blur(20px);
+    pointer-events: none;
+}
+
+.slide.active {
+    transform: scale(1) translateY(0) translateZ(0);
+    opacity: 1;
+    filter: blur(0);
+    z-index: 10;
+}
+
+/* --- Cinematic Text Reveals --- */
+.cinematic-text {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    filter: blur(10px);
+    transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.slide.active .cinematic-text {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+}
+
+/* Stagger Delays */
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+.delay-500 { transition-delay: 500ms; }
+.delay-700 { transition-delay: 700ms; }
+.delay-1000 { transition-delay: 1000ms; }
+
+/* --- Neon Glows --- */
+.neon-text {
+    text-shadow: 0 0 10px rgba(34, 211, 238, 0.5), 0 0 20px rgba(34, 211, 238, 0.3);
+}
+
+.neon-box {
+    box-shadow: 0 0 15px rgba(34, 211, 238, 0.2), inset 0 0 15px rgba(34, 211, 238, 0.1);
+}
+
+/* --- 3D Tilt Cards --- */
+.tilt-card {
+    transform-style: preserve-3d;
+    transition: transform 0.1s ease-out; /* Fast response for mouse */
+}
+
+.tilt-content {
+    transform: translateZ(20px); /* Pop out effect */
+}
+
+/* --- Gamified Elements --- */
+.skill-tree-line {
+    height: 0;
+    transition: height 1.5s ease-in-out;
+}
+.slide.active .skill-tree-line {
+    height: 100%;
+}
+
+.badge-unlock {
+    transform: scale(0);
+    opacity: 0;
+}
+.slide.active .badge-unlock {
+    animation: badgePop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes badgePop {
+    0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+    100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+/* --- Marquee --- */
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+    animation: marquee 20s linear infinite;
+}
+
+/* --- Vignette --- */
+.vignette {
+    background: radial-gradient(circle, transparent 50%, rgba(2, 6, 23, 0.8) 100%);
+    pointer-events: none;
+}
+
+/* --- Custom Scrollbar --- */
+::-webkit-scrollbar { display: none; }
+
+/* --- Mobile Optimizations --- */
+@media (max-width: 768px) {
+    .tilt-card {
+        transform: none !important; /* Disable tilt on mobile */
+    }
+    .tilt-content {
+        transform: none !important;
+    }
+    
+    /* Simplify transitions for performance */
+    .slide.prev {
+        transform: translateY(-100%);
+        filter: none;
+    }
+    .slide.next {
+        transform: translateY(100%);
+        filter: none;
+    }
+    
+    /* Adjust text sizes */
+    .neon-text {
+        text-shadow: 0 0 5px rgba(34, 211, 238, 0.5);
+    }
+}
