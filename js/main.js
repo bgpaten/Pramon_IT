@@ -139,6 +139,38 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof lucide !== 'undefined') lucide.createIcons();
 
     // Event Listeners
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    if (fullscreenBtn) {
+        const fullscreenIcon = fullscreenBtn.querySelector('i');
+        fullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(e => {
+                    console.error(`Error attempting to enable full-screen mode: ${e.message} (${e.name})`);
+                });
+                fullscreenIcon.setAttribute('data-lucide', 'minimize');
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    fullscreenIcon.setAttribute('data-lucide', 'maximize');
+                }
+            }
+            setTimeout(() => {
+                lucide.createIcons();
+            }, 100);
+        });
+        
+        // Listen for fullscreen change events (ESC key, etc.)
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                fullscreenIcon.setAttribute('data-lucide', 'maximize');
+                lucide.createIcons();
+            } else {
+                fullscreenIcon.setAttribute('data-lucide', 'minimize');
+                lucide.createIcons();
+            }
+        });
+    }
+
     prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
     nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
     
